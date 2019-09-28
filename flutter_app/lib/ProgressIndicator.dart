@@ -52,7 +52,7 @@ class ProgressIndicator1 extends StatelessWidget{
             value: .5,
           ),
           //指定高度
-          Text("指定高度"),
+          Text("指定线性进度条高度"),
           SizedBox(
             height: 3,
             child: LinearProgressIndicator(
