@@ -11,10 +11,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: FocusTestRoute(title: "文本框"),
+//      theme: ThemeData(
+//      primarySwatch: Colors.red,
+//    ),
+    theme: ThemeData(
+      hintColor: Colors.red[200],
+      inputDecorationTheme: InputDecorationTheme(
+        labelStyle: TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: Colors.grey,fontSize: 14)
+      )
+    ),
+      home: FromTest(),
     );
   }
 }
@@ -57,16 +64,17 @@ class _ShowState extends State<Show> {
       ),
       body: Column(
         children: <Widget>[
-
           TextField(
             autofocus: true,
             decoration: InputDecoration(
                 labelText: "用户名",
                 hintText: "用户名或邮箱",
-                prefixIcon: Icon(Icons.person)
+                prefixIcon: Icon(Icons.person),
+              border: InputBorder.none
             ),
             controller: _unameController,
             textInputAction:TextInputAction.search,
+
             /*  onChanged: (V){
               print(_unameController.text);
             },*/
@@ -102,6 +110,12 @@ class _FocusTestRouteState extends State<FocusTestRoute>{
   FocusNode focusNode1 = new FocusNode();
   FocusNode focusNode2 = new FocusNode();
   FocusScopeNode focusScopeNode;
+
+  void initState(){
+    focusNode1.addListener((){
+      print(focusNode1.hasFocus);
+    });
+  }
 
   @override
   Widget build(BuildContext context){
@@ -148,6 +162,87 @@ class _FocusTestRouteState extends State<FocusTestRoute>{
             );
           })
         ],
+      ),
+    );
+  }
+}
+
+/**
+ * 表单
+ */
+class FromTest extends StatefulWidget{
+
+  @override
+  _FromTestState createState() {
+     return _FromTestState();
+  }
+}
+
+class _FromTestState extends State<FromTest>{
+  TextEditingController _unameController = new TextEditingController();
+  TextEditingController _pwdController = new TextEditingController();
+  GlobalKey _fromKey = new GlobalKey<FormState>();
+
+
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("From Test"),
+      ),
+      body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 24.0),
+        child: Form(
+          key: _fromKey,
+          autovalidate: true,
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                autofocus: true,
+                controller: _unameController,
+                decoration: InputDecoration(
+                  labelText: "用户名",
+                  hintText: "用户名或邮箱",
+                  icon: Icon(Icons.person),
+                ),
+                validator: (v){
+                  return v.trim().length > 0 ? null :"用户名不能为空";
+                },
+              ),
+              TextFormField(
+                controller: _pwdController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: "密码",
+                  hintText: "登录密码",
+                  icon: Icon(Icons.lock),
+                ),
+                validator: (v){
+                  return v.trim().length > 5 ? null :"密码不能少于6位";
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 28),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: RaisedButton(
+                        padding: EdgeInsets.all(15),
+                        child: Text("登录"),
+                        color: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        onPressed: (){
+                          if((_fromKey.currentState as FormState).validate()){
+
+                          }
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
