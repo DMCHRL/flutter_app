@@ -50,6 +50,76 @@ class AlertDialogRoute extends StatelessWidget{
       );
     }
 
+    // 一般弹窗
+    Future<void> changeLanguage() async{
+      int i = await showDialog<int>(
+        context: context,
+        builder: (BuildContext context){
+          return SimpleDialog(
+            title: Text("请选择语言"),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: (){
+                  Navigator.pop(context,1);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Text("中文简体"),
+                ),
+              ),
+              SimpleDialogOption(
+                onPressed: (){
+                  Navigator.pop(context,2);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Text("美国英语"),
+                ),
+              )
+            ],
+          );
+        }
+      );
+
+      if(i != null){
+        print("选择了 ${i == 1? "中文" : "英文"}");
+      }
+    }
+
+    //列表弹窗
+    Future<void> showListDialog() async {
+      int index = await showDialog<int>(
+        context: context,
+        builder: (BuildContext context){
+          var child = Column(
+            children: <Widget>[
+              ListTile(title: Text("请选择"),),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 30,
+                  itemBuilder: (BuildContext context,int index){
+                    return ListTile(
+                      title: Text("${index}"),
+                      onTap: () => Navigator.of(context).pop(index),
+                    );
+                  },
+                ),
+              )
+            ],
+          );
+          return Dialog(child: child,);
+        }
+      );
+
+      if(index != null){
+        print("点击了  $index");
+      }
+    }
+
+
+
+
+
     return Scaffold(
       appBar: AppBar(title: Text("AlertDialog Demo"),),
       body: Column(
@@ -65,7 +135,18 @@ class AlertDialogRoute extends StatelessWidget{
               }
             },
           ),
-
+          RaisedButton(
+            child: Text("对话框2"),
+            onPressed: () async {
+             changeLanguage();
+            },
+          ),
+          RaisedButton(
+            child: Text("对话框3--列表"),
+            onPressed: () {
+              showListDialog();
+            },
+          ),
         ],
       ),
     );
