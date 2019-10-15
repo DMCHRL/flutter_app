@@ -72,7 +72,6 @@ class GradientButton extends StatelessWidget{
       ),
     );
   }
-
 }
 
 class GradientButtonRoute extends StatefulWidget{
